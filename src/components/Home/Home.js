@@ -2,26 +2,29 @@ import React, { Component } from "react";
 import { Navigate } from "react-router-dom";
 import "./Home.css";
 import { PostData } from "../../services/PostData";
-//import UserFeed from "../UserFeed/UserFeed";
+import UserFeed from "../UserFeed/UserFeed";
 import { confirmAlert } from "react-confirm-alert";
 import "../../styles/react-confirm-alert.css";
+
 class Home extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
       data: [],
       userFeed: "",
       redirectToReferrer: false,
       name: "",
     };
+
     this.getUserFeed = this.getUserFeed.bind(this);
     this.feedUpdate = this.feedUpdate.bind(this);
     this.onChange = this.onChange.bind(this);
     this.deleteFeed = this.deleteFeed.bind(this);
-    this.editFeed = this.editFeed.bind(this);
     this.deleteFeedAction = this.deleteFeedAction.bind(this);
     this.logout = this.logout.bind(this);
   }
+
   componentWillMount() {
     if (sessionStorage.getItem("userData")) {
       this.getUserFeed();
@@ -44,6 +47,7 @@ class Home extends Component {
       });
     }
   }
+
   deleteFeed(e) {
     confirmAlert({
       title: "Delete Feed",
@@ -55,7 +59,7 @@ class Home extends Component {
         },
         {
           label: "No",
-          //onClick: () => alert('Click No')
+          onClick: () => alert("Click No"),
         },
       ],
     });
@@ -63,23 +67,33 @@ class Home extends Component {
 
   deleteFeedAction(e) {
     let updateIndex = e.target.getAttribute("value");
+
     let feed_id = document.getElementById("del").getAttribute("data");
+
     let data = JSON.parse(sessionStorage.getItem("userData"));
+
     let postData = { user_id: data.userData.user_id, feed_id: feed_id };
     if (postData) {
       PostData("feedDelete", postData).then((result) => {
         this.state.data.splice(updateIndex, 1);
         this.setState({ data: this.state.data });
+
         if (result.success) {
           alert(result.success);
         } else alert(result.error);
       });
     }
   }
+
+  editFeed(e) {
+    alert("j");
+  }
+
   getUserFeed() {
     let data = JSON.parse(sessionStorage.getItem("userData"));
     this.setState({ name: data.userData.name });
     let postData = { user_id: data.userData.user_id };
+
     if (data) {
       PostData("feed", postData).then((result) => {
         let responseJson = result;
@@ -90,10 +104,10 @@ class Home extends Component {
       });
     }
   }
+
   onChange(e) {
     this.setState({ userFeed: e.target.value });
   }
-
   logout() {
     sessionStorage.setItem("userData", "");
     sessionStorage.clear();
@@ -104,6 +118,7 @@ class Home extends Component {
     if (this.state.redirectToReferrer) {
       return <Navigate to={"/login"} />;
     }
+
     return (
       <div className="row" id="Body">
         <div className="medium-12 columns">
@@ -126,8 +141,14 @@ class Home extends Component {
             />
           </form>
         </div>
+        <UserFeed
+          feedData={this.state.data}
+          deleteFeed={this.deleteFeed}
+          name={this.state.name}
+        />
       </div>
     );
   }
 }
+
 export default Home;
