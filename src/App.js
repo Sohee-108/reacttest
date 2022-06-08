@@ -1,26 +1,32 @@
-import logo from "./logo.svg";
-import "./App.css";
-
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload. Hello GNU_REACT SSO
-          TEST
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import React, { Component } from "react";
+import "./styles/foundation.min.css";
+import "./styles/custom.css";
+import Router from "./router";
+import Header from "./components/Header/Header";
+import Footer from "./components/Footer/Footer";
+import MobileHeader from "./components/MobileHeader/MobileHeader";
+class App extends Component {
+  constructor() {
+    super();
+    this.state = {
+      appName: "ReactJS Feed Example",
+      home: false,
+    };
+  }
+  render() {
+    return (
+      <div className="off-canvas-wrapper">
+        <div className="off-canvas-wrapper-inner" data-off-canvas-wrapper>
+          <div className="off-canvas-content" data-off-canvas-content>
+            <MobileHeader name={this.state.appName} />
+            <Header name={this.state.appName} />
+            <Router name={this.state.appName} />
+            <hr />
+            <Footer />
+          </div>
+        </div>
+      </div>
+    );
+  }
 }
-
 export default App;
